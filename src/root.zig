@@ -4,7 +4,7 @@ const utils = @import("utils.zig");
 const loginForm = @import("tui.zig").loginForm;
 const readLine = @import("tui.zig").readLine;
 
-const session_dir = ".local/share/statscli";
+const session_dir = ".local/share/statuscli";
 const session_file = session_dir ++ "/session";
 const status_template = @embedFile("example.txt");
 
@@ -140,10 +140,10 @@ pub fn printUsage(io: std.Io) !void {
     defer stdout.interface.flush() catch {};
     try stdout.interface.writeAll(
         \\usage:
-        \\  statscli login
-        \\  statscli add
-        \\  statscli del    [TODO]
-        \\  statscli logout
+        \\  statuscli login
+        \\  statuscli add
+        \\  statuscli del    [TODO]
+        \\  statuscli logout
         \\
     );
 }
@@ -173,7 +173,7 @@ pub fn runCli(
     }
 
     if (std.mem.eql(u8, cmd, "add")) {
-        const path = args.next() orelse "/tmp/statscli";
+        const path = args.next() orelse "/tmp/statuscli";
         if (!try client.loadSession(io)) return error.NotLoggedIn;
         try editFile(allocator, io, environ_map, path);
         const data = try std.Io.Dir.cwd().readFileAlloc(io, path, allocator, .limited(4096));
@@ -187,7 +187,7 @@ pub fn runCli(
         defer allocator.free(line);
 
         try client.postStatus(msg.content, msg.face);
-        if (std.mem.eql(u8, path, "/tmp/statscli")) {
+        if (std.mem.eql(u8, path, "/tmp/statuscli")) {
             try deleteFileIfExists(io, path);
         }
         try stdout.interface.writeAll("posted\n");
